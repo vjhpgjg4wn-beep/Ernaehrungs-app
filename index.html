@@ -197,7 +197,9 @@ function updatePreview() {
 
 Object.values(inputs).forEach(id => {
   $(id).addEventListener("input", updatePreview);
+  $(id).addEventListener("change", updatePreview);
 });
+$("portion").addEventListener("change", updatePreview);
 
 $("portion").addEventListener("input", updatePreview);
 updatePreview();
