@@ -168,7 +168,36 @@ try{all=JSON.parse(localStorage.getItem(storageKey)||"{}")||{}}
 catch(e){all={}}
 function list(){return all[$("day").value]||[]}
 function save(){localStorage.setItem(storageKey,JSON.stringify(all))}
-function render(){
+$("exportData").addEventListener("click",()=>{
+  try {
+    const backup = {
+      app: "ernaehrungs-app",
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      data: all
+    };
+
+    const blob = new Blob(
+      [JSON.stringify(backup, null, 2)],
+      {type:"application/json"}
+    );
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "ernaehrung-backup-" + today() + ".json";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+
+    $("backupStatus").textContent =
+      "Sicherung wurde vorbereitet. Bitte prüfe, ob die Datei heruntergeladen wurde.";
+  } catch (error) {
+    $("backupStatus").textContent =
+      "Sicherung fehlgeschlagen. Bitte versuche es erneut.";
+  }
+});function render(){
 const items=list();
 fields.forEach(f=>{
 const total=items.reduce((s,x)=>s+(Number(x[f])||0),0);
