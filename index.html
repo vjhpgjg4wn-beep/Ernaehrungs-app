@@ -69,8 +69,14 @@ details summary{cursor:pointer;font-weight:600}
 <form id="foodForm">
 <label for="name">Lebensmittel</label>
 <input id="name" required placeholder="z. B. Skyr natur">
-<label for="portion">Meine Portion (g)</label>
-<input id="portion" type="number" min="0.1" step="any" value="100" required>
+<label for="portion">Meine Portion</label>
+<div class="grid">
+  <input id="portion" type="number" min="0.1" step="any" value="100" required>
+  <select id="portionUnit" style="width:100%;padding:12px;border:1px solid #dce4da;border-radius:10px;font-size:16px;background:white">
+    <option value="g">Gramm (g)</option>
+    <option value="ml">Milliliter (ml)</option>
+  </select>
+</div>
 <div class="grid">
 <div><label for="fKcal">Kalorien (kcal)</label>
 <input id="fKcal" type="number" min="0" step="any" required placeholder="150"></div>
