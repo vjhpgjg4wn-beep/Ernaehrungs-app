@@ -168,8 +168,18 @@ $("entries").append(div);
 }
 $("foodForm").addEventListener("submit",e=>{
 e.preventDefault();
-const item={name:$("name").value.trim()};
-fields.forEach(f=>item[f]=Number($(inputs[f]).value)||0);
+const portion = Number($("portion").value);
+if (!portion || portion <= 0) {
+  alert("Bitte gib eine gültige Portionsgröße ein.");
+  return;
+}
+const factor = portion / 100;
+const item = {
+  name: $("name").value.trim() + " (" + portion + " g)"
+};
+fields.forEach(f=>{
+  item[f]=(Number($(inputs[f]).value)||0)*factor;
+});
 if(!all[$("day").value])all[$("day").value]=[];
 all[$("day").value].push(item);
 save();
