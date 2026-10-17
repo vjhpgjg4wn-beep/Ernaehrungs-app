@@ -121,6 +121,25 @@ details summary{cursor:pointer;font-weight:600}
 <div id="entries"><p>Noch keine Lebensmittel eingetragen.</p></div>
 </div>
 
+<div class="card">
+  <h2>💾 Datensicherung</h2>
+  <p class="small">
+    Sichere deine gespeicherten Ernährungstage und stelle sie später wieder her.
+  </p>
+
+  <button type="button" id="exportData">
+    Daten sichern
+  </button>
+
+  <label for="importFile">Sicherungsdatei wiederherstellen</label>
+  <input type="file" id="importFile" accept=".json,application/json">
+
+  <button type="button" id="importData">
+    Sicherung importieren
+  </button>
+
+  <p id="backupStatus" class="small"></p>
+</div>
 <p class="small">Deine Einträge werden lokal in diesem Browser gespeichert.
 Dies ist eine erste Testversion, noch keine vollständige Nährwertanalyse.</p>
 </main>
