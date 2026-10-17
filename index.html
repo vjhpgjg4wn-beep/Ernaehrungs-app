@@ -59,6 +59,13 @@ details summary{cursor:pointer;font-weight:600}
 <div class="card">
 <h2>➕ Lebensmittel hinzufügen</h2>
 <p class="small">Trage zunächst die Werte deiner Portion ein.</p>
+<div style="margin:12px 0">
+  <h3>📷 Lebensmittel per Barcode scannen</h3>
+  <p class="small">Scanne den Barcode auf der Verpackung.</p>
+  <button type="button" id="scanButton">Barcode scannen</button>
+  <div id="reader" style="width:100%;margin-top:12px"></div>
+  <p id="scanStatus" class="small"></p>
+</div>
 <form id="foodForm">
 <label for="name">Lebensmittel</label>
 <input id="name" required placeholder="z. B. Skyr natur">
