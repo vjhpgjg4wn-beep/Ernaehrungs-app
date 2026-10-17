@@ -220,7 +220,7 @@ if (!portion || portion <= 0) {
 }
 const factor = portion / 100;
 const item = {
-  name: $("name").value.trim() + " (" + portion + " g)"
+name: $("name").value.trim() + " (" + portion + " " + $("portionUnit").value + ")"
 };
 fields.forEach(f=>{
   item[f]=(Number($(inputs[f]).value)||0)*factor;
