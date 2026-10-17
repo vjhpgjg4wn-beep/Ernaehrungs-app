@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f8f2">
+<title>Mein Ernährungstagebuch</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f5f8f2;color:#23352b;
+font-family:-apple-system,BlinkMacSystemFont,sans-serif}
+main{max-width:520px;margin:auto;padding:22px 16px 40px}
+h1{font-size:27px;margin-bottom:5px}
+p{color:#647267}
+.card{background:white;border-radius:20px;padding:18px;
+margin:16px 0;box-shadow:0 3px 16px #18391a0b}
+label{display:block;font-size:14px;margin:12px 0 5px}
+input{width:100%;padding:12px;border:1px solid #dce4da;
+border-radius:10px;font-size:16px;background:white}
+button{border:0;border-radius:12px;padding:13px;
+background:#26734b;color:white;font-size:16px;font-weight:600;
+width:100%;margin-top:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:#f0f6ed;padding:13px;border-radius:13px}
+.num{font-size:24px;font-weight:700}
+.small{font-size:12px;color:#69796c}
+.entry{border-top:1px solid #edf0eb;padding:12px 0}
+.entry button{width:auto;padding:6px 10px;margin:5px 0 0;
+font-size:13px;background:#fbe9e5;color:#8a3020}
+details summary{cursor:pointer;font-weight:600}
+</style>
+</head>
+<body>
+<main>
+<h1>🌿 Mein Ernährungstagebuch</h1>
+<p>Dein Essen. Deine Nährwerte. Dein Überblick.</p>
+
+<div class="card">
+<label for="day">Tag auswählen</label>
+<input id="day" type="date">
+<div class="grid" style="margin-top:16px">
+<div class="stat"><div class="small">Kalorien</div>
+<div class="num" id="kcal">0</div><div class="small">kcal gegessen</div></div>
+<div class="stat"><div class="small">Protein</div>
+<div class="num" id="protein">0 g</div><div class="small">Eiweiß</div></div>
+<div class="stat"><div class="small">Kohlenhydrate</div>
+<div class="num" id="carbs">0 g</div></div>
+<div class="stat"><div class="small">Fett</div>
+<div class="num" id="fat">0 g</div></div>
+<div class="stat"><div class="small">Ballaststoffe</div>
+<div class="num" id="fiber">0 g</div></div>
+<div class="stat"><div class="small">Salz</div>
+<div class="num" id="salt">0 g</div></div>
+</div>
+</div>
+
+<div class="card">
+<h2>➕ Lebensmittel hinzufügen</h2>
+<p class="small">Trage zunächst die Werte deiner Portion ein.</p>
+<form id="foodForm">
+<label for="name">Lebensmittel</label>
+<input id="name" required placeholder="z. B. Skyr natur">
+<div class="grid">
+<div><label for="fKcal">Kalorien (kcal)</label>
+<input id="fKcal" type="number" min="0" step="any" required placeholder="150"></div>
+<div><label for="fProtein">Protein (g)</label>
+<input id="fProtein" type="number" min="0" step="any" value="0"></div>
+<div><label for="fCarbs">Kohlenhydrate (g)</label>
+<input id="fCarbs" type="number" min="0" step="any" value="0"></div>
+<div><label for="fFat">Fett (g)</label>
+<input id="fFat" type="number" min="0" step="any" value="0"></div>
+<div><label for="fFiber">Ballaststoffe (g)</label>
+<input id="fFiber" type="number" min="0" step="any" value="0"></div>
+<div><label for="fSalt">Salz (g)</label>
+<input id="fSalt" type="number" min="0" step="any" value="0"></div>
+</div>
+<details style="margin-top:16px">
+<summary>Vitamine und Mineralstoffe (optional)</summary>
+<div class="grid">
+<div><label for="fCalcium">Calcium (mg)</label><input id="fCalcium" type="number" min="0" step="any" value="0"></div>
+<div><label for="fIron">Eisen (mg)</label><input id="fIron" type="number" min="0" step="any" value="0"></div>
+<div><label for="fMagnesium">Magnesium (mg)</label><input id="fMagnesium" type="number" min="0" step="any" value="0"></div>
+<div><label for="fPotassium">Kalium (mg)</label><input id="fPotassium" type="number" min="0" step="any" value="0"></div>
+<div><label for="fVitaminC">Vitamin C (mg)</label><input id="fVitaminC" type="number" min="0" step="any" value="0"></div>
+<div><label for="fVitaminD">Vitamin D (µg)</label><input id="fVitaminD" type="number" min="0" step="any" value="0"></div>
+</div>
+</details>
+<button type="submit">Lebensmittel speichern</button>
+</form>
+</div>
+
+<div class="card">
+<h2>📋 Mein Essen heute</h2>
+<div id="entries"><p>Noch keine Lebensmittel eingetragen.</p></div>
+</div>
+
+<p class="small">Deine Einträge werden lokal in diesem Browser gespeichert.
+Dies ist eine erste Testversion, noch keine vollständige Nährwertanalyse.</p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const fields=["kcal","protein","carbs","fat","fiber","salt",
+"calcium","iron","magnesium","potassium","vitaminC","vitaminD"];
+const labels={kcal:"Kalorien",protein:"Protein",carbs:"Kohlenhydrate",
+fat:"Fett",fiber:"Ballaststoffe",salt:"Salz",calcium:"Calcium",
+iron:"Eisen",magnesium:"Magnesium",potassium:"Kalium",
+vitaminC:"Vitamin C",vitaminD:"Vitamin D"};
+const units={kcal:" kcal",protein:" g",carbs:" g",fat:" g",
+fiber:" g",salt:" g",calcium:" mg",iron:" mg",
+magnesium:" mg",potassium:" mg",vitaminC:" mg",vitaminD:" µg"};
+const inputs={kcal:"fKcal",protein:"fProtein",carbs:"fCarbs",
+fat:"fFat",fiber:"fFiber",salt:"fSalt",calcium:"fCalcium",
+iron:"fIron",magnesium:"fMagnesium",potassium:"fPotassium",
+vitaminC:"fVitaminC",vitaminD:"fVitaminD"};
+const today=()=>new Date().getFullYear()+"-"+
+String(new Date().getMonth()+1).padStart(2,"0")+"-"+
+String(new Date().getDate()).padStart(2,"0");
+$("day").value=today();
+const storageKey="ernaehrungs-app-v1";
+let all={};
+try{all=JSON.parse(localStorage.getItem(storageKey)||"{}")||{}}
+catch(e){all={}}
+function list(){return all[$("day").value]||[]}
+function save(){localStorage.setItem(storageKey,JSON.stringify(all))}
+function render(){
+const items=list();
+fields.forEach(f=>{
+const total=items.reduce((s,x)=>s+(Number(x[f])||0),0);
+$(f).textContent=(Math.round(total*10)/10)+units[f];
+});
+$("entries").replaceChildren();
+if(!items.length){
+$("entries").textContent="Noch keine Lebensmittel eingetragen.";
+return;
+}
+items.forEach((item,i)=>{
+const div=document.createElement("div");
+div.className="entry";
+const title=document.createElement("strong");
+title.textContent=item.name;
+div.append(title);
+const summary=document.createElement("p");
+summary.textContent=item.kcal+" kcal · "+item.protein+" g Protein";
+div.append(summary);
+const more=document.createElement("p");
+more.className="small";
+more.textContent=fields.filter(f=>!["kcal","protein"].includes(f))
+.map(f=>labels[f]+": "+(Number(item[f])||0)+units[f]).join(" · ");
+div.append(more);
+const btn=document.createElement("button");
+btn.textContent="Eintrag löschen";
+btn.type="button";
+btn.onclick=()=>{all[$("day").value].splice(i,1);save();render()};
+div.append(btn);
+$("entries").append(div);
+});
+}
+$("foodForm").addEventListener("submit",e=>{
+e.preventDefault();
+const item={name:$("name").value.trim()};
+fields.forEach(f=>item[f]=Number($(inputs[f]).value)||0);
+if(!all[$("day").value])all[$("day").value]=[];
+all[$("day").value].push(item);
+save();
+$("foodForm").reset();
+fields.forEach(f=>{if(inputs[f]!=="fKcal")$(inputs[f]).value="0"});
+render();
+});
+$("day").addEventListener("change",render);
+render();
+</script>
+</body>
+</html>
