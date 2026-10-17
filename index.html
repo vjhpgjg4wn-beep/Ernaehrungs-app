@@ -96,6 +96,16 @@ details summary{cursor:pointer;font-weight:600}
 <div><label for="fVitaminD">Vitamin D (µg)</label><input id="fVitaminD" type="number" min="0" step="any" value="0"></div>
 </div>
 </details>
+<div class="stat" style="margin-top:16px">
+  <h3>👀 Vorschau deiner Portion</h3>
+  <p class="small">Die Werte werden live berechnet und noch nicht gespeichert.</p>
+  <div class="grid">
+    <div><div class="small">Kalorien</div><div class="num" id="previewKcal">0 kcal</div></div>
+    <div><div class="small">Protein</div><div class="num" id="previewProtein">0 g</div></div>
+    <div><div class="small">Kohlenhydrate</div><div class="num" id="previewCarbs">0 g</div></div>
+    <div><div class="small">Fett</div><div class="num" id="previewFat">0 g</div></div>
+  </div>
+</div>
 <button type="submit">Lebensmittel speichern</button>
 </form>
 </div>
