@@ -176,6 +176,31 @@ div.append(btn);
 $("entries").append(div);
 });
 }
+function updatePreview() {
+  const portion = Number($("portion").value) || 0;
+  const factor = portion / 100;
+
+  const previewFields = {
+    kcal: "previewKcal",
+    protein: "previewProtein",
+    carbs: "previewCarbs",
+    fat: "previewFat"
+  };
+
+  Object.entries(previewFields).forEach(([field, id]) => {
+    const value = (Number($(inputs[field]).value) || 0) * factor;
+    const unit = field === "kcal" ? " kcal" : " g";
+    $(id).textContent =
+      (Math.round(value * 10) / 10) + unit;
+  });
+}
+
+Object.values(inputs).forEach(id => {
+  $(id).addEventListener("input", updatePreview);
+});
+
+$("portion").addEventListener("input", updatePreview);
+updatePreview();
 $("foodForm").addEventListener("submit",e=>{
 e.preventDefault();
 const portion = Number($("portion").value);
