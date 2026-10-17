@@ -185,6 +185,7 @@ $("entries").append(div);
 function updatePreview() {
   const portion = Number($("portion").value) || 0;
   const factor = portion / 100;
+  const unit = $("portionUnit").value;
 
   const previewFields = {
     kcal: "previewKcal",
