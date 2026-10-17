@@ -175,6 +175,88 @@ $("foodForm").reset();
 fields.forEach(f=>{if(inputs[f]!=="fKcal")$(inputs[f]).value="0"});
 render();
 });
+let barcodeScanner = null;
+
+$("scanButton").addEventListener("click", async () => {
+  const status = $("scanStatus");
+
+  if (typeof Html5Qrcode === "undefined") {
+    status.textContent = "Scanner konnte nicht geladen werden. Bitte lade die Seite neu.";
+    return;
+  }
+
+  $("scanButton").disabled = true;
+  status.textContent = "Kamera wird gestartet …";
+
+  try {
+    barcodeScanner = new Html5Qrcode("reader");
+
+    await barcodeScanner.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: { width: 250, height: 150 } },
+      async (barcode) => {
+        status.textContent = "Barcode erkannt – Produkt wird gesucht …";
+
+        try {
+          await barcodeScanner.stop();
+        } catch (e) {}
+
+        $("scanButton").disabled = false;
+
+        try {
+          const response = await fetch(
+            "https://world.openfoodfacts.org/api/v2/product/" +
+            encodeURIComponent(barcode) + ".json"
+          );
+          const data = await response.json();
+
+          if (data.status !== 1 || !data.product) {
+            status.textContent =
+              "Produkt nicht gefunden. Bitte trage die Werte manuell ein.";
+            return;
+          }
+
+          const p = data.product;
+          const n = p.nutriments || {};
+
+          $("name").value = p.product_name || "";
+          $("fKcal").value = n["energy-kcal_100g"] ?? "";
+          $("fProtein").value = n.proteins_100g ?? 0;
+          $("fCarbs").value = n.carbohydrates_100g ?? 0;
+          $("fFat").value = n.fat_100g ?? 0;
+          $("fFiber").value = n.fiber_100g ?? 0;
+          $("fSalt").value = n.salt_100g ?? 0;
+
+          $("fCalcium").value = n.calcium_100g != null
+            ? n.calcium_100g * 1000 : 0;
+          $("fIron").value = n.iron_100g != null
+            ? n.iron_100g * 1000 : 0;
+          $("fMagnesium").value = n.magnesium_100g != null
+            ? n.magnesium_100g * 1000 : 0;
+          $("fPotassium").value = n.potassium_100g != null
+            ? n.potassium_100g * 1000 : 0;
+          $("fVitaminC").value = n["vitamin-c_100g"] != null
+            ? n["vitamin-c_100g"] * 1000 : 0;
+          $("fVitaminD").value = n["vitamin-d_100g"] != null
+            ? n["vitamin-d_100g"] * 1000000 : 0;
+
+          status.textContent =
+            "Produkt gefunden! Nährwerte sind pro 100 g. Bitte prüfen und anschließend Lebensmittel speichern.";
+        } catch (e) {
+          status.textContent =
+            "Produktdaten konnten nicht geladen werden. Bitte Internetverbindung prüfen.";
+        }
+      },
+      () => {}
+    );
+
+    status.textContent = "Kamera aktiv – halte den Barcode vor die Kamera.";
+  } catch (e) {
+    $("scanButton").disabled = false;
+    status.textContent =
+      "Kamera nicht verfügbar. Bitte erlaube Safari den Kamerazugriff.";
+  }
+});
 $("day").addEventListener("change",render);
 render();
 </script>
