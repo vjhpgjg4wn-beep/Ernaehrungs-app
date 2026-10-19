@@ -180,7 +180,11 @@ let all={};
 try{all=JSON.parse(localStorage.getItem(storageKey)||"{}")||{}}
 catch(e){all={}}
 function list(){return all[$("day").value]||[]}
-function save(){localStorage.setItem(storageKey,JSON.stringify(all))}
+function save(){
+  localStorage.setItem(storageKey,JSON.stringify(all));
+  updateBackupStatus();
+}
+
 $("exportData").addEventListener("click",()=>{
   try {
     const backup = {
