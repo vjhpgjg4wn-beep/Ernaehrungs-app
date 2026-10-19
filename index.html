@@ -230,6 +230,17 @@ $("exportData").addEventListener("click",()=>{
     document.body.appendChild(link);
     link.click();
     link.remove();
+    
+localStorage.setItem(
+  "ernaehrungs-app-last-backup",
+  new Date().toISOString()
+);
+localStorage.setItem(
+  "ernaehrungs-app-backup-data",
+  JSON.stringify(all)
+);
+updateBackupStatus();
+
     URL.revokeObjectURL(url);
 
     $("backupStatus").textContent =
