@@ -264,7 +264,7 @@ function render(){
 const items=list();
 fields.forEach(f=>{
 const total=items.reduce((s,x)=>s+(Number(x[f])||0),0);
-$(f).textContent=(Math.round(total*10)/10)+units[f];
+if($(f)) $(f).textContent=(Math.round(total*10)/10)+units[f];
 });
 $("entries").replaceChildren();
 if(!items.length){
