@@ -185,6 +185,30 @@ function save(){
   updateBackupStatus();
 }
 
+function updateBackupStatus(){
+  const last=localStorage.getItem("ernaehrungs-app-last-backup");
+  const lastDisplay=$("backupLast");
+  const status=$("backupLiveStatus");
+
+  if(!last){
+    lastDisplay.textContent="Letzte Sicherung: Noch keine erfasst";
+    status.textContent="Sicherungsstatus: Sicherung empfohlen";
+    return;
+  }
+
+  lastDisplay.textContent="Letzte Sicherung: "+
+    new Date(last).toLocaleString("de-DE");
+
+  const current=JSON.stringify(all);
+  const saved=localStorage.getItem("ernaehrungs-app-backup-data");
+
+  if(current===saved){
+    status.textContent="Sicherungsstatus: Aktuell";
+  }else{
+    status.textContent="Sicherungsstatus: Sicherung empfohlen";
+  }
+}
+
 $("exportData").addEventListener("click",()=>{
   try {
     const backup = {
