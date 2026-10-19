@@ -197,7 +197,67 @@ $("exportData").addEventListener("click",()=>{
     $("backupStatus").textContent =
       "Sicherung fehlgeschlagen. Bitte versuche es erneut.";
   }
-});function render(){
+});
+
+$("importData").addEventListener("click",()=>{
+  const fileInput=$("importFile");
+  const status=$("backupStatus");
+
+  if(!fileInput.files || !fileInput.files[0]){
+    status.textContent="Bitte wähle zuerst deine Sicherungsdatei aus.";
+    return;
+  }
+
+  const reader=new FileReader();
+
+  reader.onload=()=>{
+    try{
+      const backup=JSON.parse(reader.result);
+
+      if(
+        backup.app!=="ernaehrungs-app" ||
+        backup.version!==1 ||
+        !backup.data ||
+        typeof backup.data!=="object" ||
+        Array.isArray(backup.data)
+      ){
+        throw new Error("Ungültige Sicherungsdatei");
+      }
+
+      for(const day in backup.data){
+        if(
+          !/^\d{4}-\d{2}-\d{2}$/.test(day) ||
+          !Array.isArray(backup.data[day])
+        ){
+          throw new Error("Ungültige Tagesdaten");
+        }
+      }
+
+      if(!confirm(
+        "Einträge für Tage aus der Sicherung werden ersetzt. Möchtest du fortfahren? Erstelle vorher eine aktuelle Sicherung."
+      )){
+        status.textContent="Import abgebrochen.";
+        return;
+      }
+
+      Object.assign(all,backup.data);
+      save();
+      render();
+
+      status.textContent="Sicherung erfolgreich importiert.";
+    }catch(error){
+      status.textContent="Import fehlgeschlagen. Bitte prüfe die Sicherungsdatei.";
+    }
+  };
+
+  reader.onerror=()=>{
+    status.textContent="Die Datei konnte nicht gelesen werden.";
+  };
+
+  reader.readAsText(fileInput.files[0]);
+});
+  
+function render(){
 const items=list();
 fields.forEach(f=>{
 const total=items.reduce((s,x)=>s+(Number(x[f])||0),0);
