@@ -245,9 +245,12 @@ $("importData").addEventListener("click",()=>{
       render();
 
       status.textContent="Sicherung erfolgreich importiert.";
-    }catch(error){
-      status.textContent="Import fehlgeschlagen. Bitte prüfe die Sicherungsdatei.";
-    }
+  
+}catch(error){
+  console.error("Importfehler:",error);
+  status.textContent="Import fehlgeschlagen: "+error.message;
+}
+
   };
 
   reader.onerror=()=>{
